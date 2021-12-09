@@ -1,0 +1,25 @@
+MAIN {
+	INT a = 10;
+	INT var;
+    FLOAT b = 2.5;
+	BOOL d = True;
+
+	var = 10 - 2;
+	var = 10 / 2;
+	var = 10 * 2;
+
+    IF (a >= 10) {
+        PRINT(a);
+    } ELSE {
+        PRINT(b);
+    }
+
+    WHILE(d) {
+        a = a + 1;
+        IF (a > 10) {
+            d = False;
+        }
+    }
+
+    INPUT(var);
+}
