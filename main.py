@@ -6,5 +6,7 @@ if __name__ == '__main__':
     a = LexicalAnalyser()
 
     file.read()
-
-    a.analyse(file.buffer[0])
+    for line in file.buffer:
+        a.analyse(line)
+    
+    a.print_data()

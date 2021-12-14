@@ -1,5 +1,7 @@
+import re
 class LexicalAnalyser:
     #(token, regex)
+    #ORDER MATTERS
     RULES = [
         ('MAIN', r'MAIN'),
         ('INT', r'INT'),
@@ -7,14 +9,14 @@ class LexicalAnalyser:
         ('BOOL', r'BOOL'),
         ('IF', r'IF'),
         ('ELSE', r'ELSE'),
+        ('WHILE', r'WHILE'),
         ('PRINT', r'PRINT'),
         ('INPUT', r'INPUT'),
-        ('WHILE', r'WHILE'),
         ('LBRACKET', r'\('),
         ('RBRACKET', r'\)'),
-        ('PCOMMA', r';'),
         ('LBRACE', r'\{'),
         ('RBRACE', r'\}'),
+        ('PCOMMA', r';'),
         ('EQ', r'=='),
         ('LE', r'<='),
         ('GE', r'>='),
@@ -30,19 +32,40 @@ class LexicalAnalyser:
         ('DIV', r'\/'),
         ('TRUE', r'True'),
         ('FALSE', r'False'),
-        ('ID', r'[a-z_A-Z0-9]\w*'),
-        ('FLOAT', r'\d(\d)*\.\d(\d)*'),
+        ('FLOATN', r'\d(\d)*\.\d(\d)*'),
         ('INTEGER', r'\d(\d)*'),
+        ('ID', r'[a-z_A-Z0-9]\w*'),
         ('NEWLINE', r'\n'),
-        ('TAB', r'[ \t]+'),
+        ('IGNORE', r'[ \t]+'),
         ('MISMATCH', r'.')
     ]
 
-    formatted_rules = "|".join(["(?P<{}>{})".format(name, regex) for name, regex in RULES])
+    formatted_rules = "|".join('(?P<%s>%s)' % x for x in RULES)
+
+    line = 0
 
     def __init__(self):
         #(token, lexeme, row, col)
         self.data = []
     
+    def print_data(self):
+        for token, lexeme, row, col in self.data:
+            print(f"Token = {token}, Lexeme = '{lexeme}' Row = {row}, Col = {col}")
+
     def analyse(self, code):
-        print(self.formatted_rules)
+        line_start = 0 # for col calculation
+        for m in re.finditer(self.formatted_rules, code):
+            token_type = m.lastgroup
+            token_lexeme = m.group(token_type)
+
+            if token_type == 'NEWLINE':
+                self.line += 1
+                line_start = m.end()
+            elif token_type == 'IGNORE':
+                continue
+            elif token_type == 'MISMATCH':
+                raise RuntimeError("{} unexpected on line {}".format(token_lexeme, self.line))
+            else:
+                col = m.start() - line_start
+                data_tuple = (token_type, token_lexeme, self.line, col)
+                self.data.append(data_tuple)
