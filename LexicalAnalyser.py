@@ -42,7 +42,7 @@ class LexicalAnalyser:
 
     formatted_rules = "|".join('(?P<%s>%s)' % x for x in RULES)
 
-    line = 0
+    line = 1
 
     def __init__(self):
         #(token, lexeme, row, col)
