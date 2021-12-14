@@ -30,14 +30,13 @@ class LexicalAnalyser:
         ('MINUS', r'-'),
         ('MULT', r'\*'),
         ('DIV', r'\/'),
-        ('TRUE', r'True'),
-        ('FALSE', r'False'),
         ('FLOATN', r'\d(\d)*\.\d(\d)*'),
         ('INTEGER', r'\d(\d)*'),
-        ('ID', r'[a-z_A-Z0-9]\w*'),
+        ('BOOLEAN', r'True|False'),
+        ('ID', r'[a-z_a-z0-9]\w*'),
         ('NEWLINE', r'\n'),
         ('IGNORE', r'[ \t]+'),
-        ('MISMATCH', r'.')
+        ('MISMATCH', r'.'),
     ]
 
     formatted_rules = "|".join('(?P<%s>%s)' % x for x in RULES)
@@ -50,7 +49,7 @@ class LexicalAnalyser:
     
     def print_tokens(self):
         for token, lexeme, row, col in self.data:
-            print(f"Token = {token}, Lexeme = '{lexeme}' Row = {row}, Col = {col}")
+            print(f"Token = {token}, Lexeme = '{lexeme}', Row = {row}, Col = {col}")
 
     def analyse(self, code):
         line_start = 0 # for col calculation
