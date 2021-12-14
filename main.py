@@ -3,10 +3,10 @@ from LexicalAnalyser import LexicalAnalyser
 
 if __name__ == '__main__':
     file = File()
-    a = LexicalAnalyser()
+    lexical = LexicalAnalyser()
 
     file.read()
     for line in file.buffer:
-        a.analyse(line)
+        lexical.analyse(line)
     
-    a.print_data()
+    lexical.print_tokens()

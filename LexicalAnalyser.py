@@ -48,7 +48,7 @@ class LexicalAnalyser:
         #(token, lexeme, row, col)
         self.data = []
     
-    def print_data(self):
+    def print_tokens(self):
         for token, lexeme, row, col in self.data:
             print(f"Token = {token}, Lexeme = '{lexeme}' Row = {row}, Col = {col}")
 
