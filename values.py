@@ -80,7 +80,7 @@ GRAMMAR = [
     },
     {
         "development": [
-            "main",
+            "MAIN",
             "CMD"
         ],
         "nonterminal": "PROGRAM"
@@ -144,28 +144,28 @@ GRAMMAR = [
     },
     {
         "development": [
-            "IF",
+            "IFNT",
             "G"
         ],
         "nonterminal": "B"
     },
     {
         "development": [
-            "WHILE",
+            "WHILENT",
             "G"
         ],
         "nonterminal": "C"
     },
     {
         "development": [
-            "INPUT",
+            "INPUTNT",
             "G"
         ],
         "nonterminal": "D"
     },
     {
         "development": [
-            "PRINT",
+            "PRINTNT",
             "G"
         ],
         "nonterminal": "E"
@@ -187,8 +187,7 @@ GRAMMAR = [
         "development": [
             "VOID"
         ],
-        "nonterminal": "G",
-        "isVoid": True
+        "nonterminal": "G"
     },
     {
         "development": [
@@ -207,31 +206,31 @@ GRAMMAR = [
     },
     {
         "development": [
-            "if",
+            "IF",
             "LPAR",
             "STMT",
             "RPAR",
             "CMD"
         ],
-        "nonterminal": "IF"
+        "nonterminal": "IFNT"
     },
     {
         "development": [
-            "if",
+            "IF",
             "LPAR",
             "STMT",
             "RPAR",
             "CMD",
-            "ELSE"
+            "ELSENT"
         ],
-        "nonterminal": "IF"
+        "nonterminal": "IFNT"
     },
     {
         "development": [
-            "else",
+            "ELSE",
             "CMD"
         ],
-        "nonterminal": "ELSE"
+        "nonterminal": "ELSENT"
     },
     {
         "development": [
@@ -320,33 +319,33 @@ GRAMMAR = [
     },
     {
         "development": [
-            "while",
+            "WHILE",
             "LPAR",
             "STMT",
             "RPAR",
             "CMD"
         ],
-        "nonterminal": "WHILE"
+        "nonterminal": "WHILENT"
     },
     {
         "development": [
-            "input",
+            "INPUT",
             "LPAR",
             "VAR",
             "RPAR",
             "SEMICOLON"
         ],
-        "nonterminal": "INPUT"
+        "nonterminal": "INPUTNT"
     },
     {
         "development": [
-            "print",
+            "PRINT",
             "LPAR",
             "VAR",
             "RPAR",
             "SEMICOLON"
         ],
-        "nonterminal": "PRINT"
+        "nonterminal": "PRINTNT"
     },
     {
         "development": [
@@ -368,19 +367,19 @@ GRAMMAR = [
     },
     {
         "development": [
-            "int"
+            "INT"
         ],
         "nonterminal": "TIPO"
     },
     {
         "development": [
-            "float"
+            "FLOAT"
         ],
         "nonterminal": "TIPO"
     },
     {
         "development": [
-            "bool"
+            "BOOL"
         ],
         "nonterminal": "TIPO"
     },
@@ -510,13 +509,13 @@ GRAMMAR = [
     },
     {
         "development": [
-            "and"
+            "AND"
         ],
         "nonterminal": "SIGN_LOG"
     },
     {
         "development": [
-            "or"
+            "OR"
         ],
         "nonterminal": "SIGN_LOG"
     },

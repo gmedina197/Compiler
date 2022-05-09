@@ -1,11 +1,10 @@
 import json
+import re
 
 from values import TERMINALS, NON_TERMINALS, GRAMMAR
 
-
-class X:
-    token = 'main'
-    type = 'terminal'
+IS_INTEGER = r'\d(\d)*'
+IS_FLOAT = r'\d(\d)*\.\d(\d)*'
 
 
 class SyntaticAnalyser:
@@ -24,7 +23,9 @@ class SyntaticAnalyser:
         self.input.append('$')
         self.stack.append('0')
 
+        print("INPUT")
         print(self.input)
+        print("\n")
 
         while True:
             current_input = self.input[0]
@@ -33,15 +34,17 @@ class SyntaticAnalyser:
             table_line = self.table.get(current_input, None)
 
             if table_line is None:
-                print('Error')
-                break
+                if(re.findall(IS_FLOAT, current_input)):
+                    table_line = self.table.get('FLOAT_NUM')
+                elif(re.findall(IS_INTEGER, current_input)):
+                    table_line = self.table.get('INTEGER_NUM')
+                else:
+                    table_line = self.table.get('VARIABLE_NAME')
 
             action = table_line[current_stack]
 
-            print(str(self.stack) + "  |  " + str(self.input) + " | " + action)
-
             if action == 'e':
-                print('Error')
+                print('Error 2')
                 break
 
             if action == 'acc':
@@ -60,7 +63,9 @@ class SyntaticAnalyser:
                 self.stack.append(next_action)
             elif operation == 'r':
                 reduce_rule = GRAMMAR[int(next_action)]
-                reduce_char_size = 0 if reduce_rule.get("isVoid", False) else len(reduce_rule["development"]) * 2 
+
+                reduce_char_size = 0 if reduce_rule.get(
+                    "isVoid", False) else len(reduce_rule["development"]) * 2
 
                 if reduce_char_size:
                     self.stack = self.stack[:-reduce_char_size]
@@ -79,7 +84,7 @@ class SyntaticAnalyser:
 
     def sanitize_tokens(self, tokens):
         for token, lexeme, row, col in tokens:
-            self.input.append(lexeme.lower())
+            self.input.append(lexeme)
 
     def load_json(self):
         f = open('table.json', 'r')

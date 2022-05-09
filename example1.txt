@@ -1,3 +1,23 @@
 MAIN {
-    int var = 1;
+    INT var = 1.2 + 1.0;
+
+    BOOL b = True;
+    
+    IF(True) {
+        var = 1;
+    } ELSE {
+        var = 2;
+    }
+
+    IF(var >= b) {
+        var = 1;
+    }
+
+    WHILE(var < b) {
+        var = var + 1;
+    }
+
+    INPUT(var);
+    PRINT(var);
+   
 }
