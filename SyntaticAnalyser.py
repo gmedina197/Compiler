@@ -43,8 +43,8 @@ class SyntaticAnalyser:
 
             action = table_line[current_stack]
 
-            if action == 'e':
-                print('Error 2')
+            if "e" in action:
+                print('Error')
                 break
 
             if action == 'acc':

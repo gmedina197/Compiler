@@ -409,13 +409,13 @@ GRAMMAR = [
     },
     {
         "development": [
-            "1"
+            "int_num"
         ],
         "nonterminal": "INTEGER"
     },
     {
         "development": [
-            "1.2"
+            "float_num"
         ],
         "nonterminal": "FLOAT_N"
     },
@@ -446,6 +446,12 @@ GRAMMAR = [
     {
         "development": [
             "OP"
+        ],
+        "nonterminal": "STMT"
+    },
+    {
+        "development": [
+            "INTEGER"
         ],
         "nonterminal": "STMT"
     },

@@ -3,21 +3,10 @@ MAIN {
 
     BOOL b = True;
     
-    IF(True) {
+    IF(var >= 3) 
         var = 1;
     } ELSE {
         var = 2;
     }
-
-    IF(var >= b) {
-        var = 1;
-    }
-
-    WHILE(var < b) {
-        var = var + 1;
-    }
-
-    INPUT(var);
-    PRINT(var);
    
 }
