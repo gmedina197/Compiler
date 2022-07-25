@@ -1,6 +1,7 @@
 import sys
 from File import File
 from LexicalAnalyser import LexicalAnalyser
+from SemanticAnalyser import SemanticAnalyser
 from SyntaticAnalyser import SyntaticAnalyser
 
 if __name__ == '__main__':
@@ -12,8 +13,12 @@ if __name__ == '__main__':
     file.read()
     for line in file.buffer:
         lexical.analyse(line)
-    
-    #lexical.print_tokens()
 
     syntatic = SyntaticAnalyser()
     syntatic.analyse(lexical.data)
+
+    if syntatic.has_error:
+        print('Error')
+    else:
+        semantic = SemanticAnalyser()
+        semantic.analyse(lexical.data)

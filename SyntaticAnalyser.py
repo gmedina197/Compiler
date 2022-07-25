@@ -13,6 +13,7 @@ class SyntaticAnalyser:
     stack = []
     input = []
     actions = []
+    has_error = False
 
     def __init__(self):
         self.load_json()
@@ -22,10 +23,6 @@ class SyntaticAnalyser:
 
         self.input.append('$')
         self.stack.append('0')
-
-        print("INPUT")
-        print(self.input)
-        print("\n")
 
         while True:
             current_input = self.input[0]
@@ -44,11 +41,11 @@ class SyntaticAnalyser:
             action = table_line[current_stack]
 
             if "e" in action:
-                print('Error')
+                self.has_error = True
                 break
 
             if action == 'acc':
-                print('Accepted')
+                #print('Accepted')
                 break
 
             self.actions.append(action)
@@ -77,7 +74,7 @@ class SyntaticAnalyser:
                 self.stack.append(str(goto_state))
 
             else:
-                print('Error')
+                self.has_error = True
 
     def lookup_goto(self, index, symbol):
         return self.table[symbol][index]

@@ -1,12 +1,13 @@
 MAIN {
-    INT var = 1.2 + 1.0;
+    INT var = 1;
 
-    BOOL b = True;
-    
-    IF(var >= 3) 
-        var = 1;
-    } ELSE {
-        var = 2;
+    BOOL a = True;
+
+    BOOL b = False;
+
+    FLOAT real = 2.0 + 2.0;
+
+    WHILE (var < 10) {
+        var = var + 1;
     }
-   
 }
