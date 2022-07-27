@@ -1,13 +1,17 @@
 MAIN {
+    #INT c;
+    #INT a = 10;
+    #INT b = 2 * 10;
+
+    #INT var = 3 + 1 / 2 + 1 * 2;
     INT var = 1;
+    
+    BOOL v = True;
 
-    BOOL a = True;
-
-    BOOL b = False;
-
-    FLOAT real = 2.0 + 2.0;
-
-    WHILE (var < 10) {
+    IF (var < 10) {
+        IF (var == 5) {
+            v = False;
+        } 
         var = var + 1;
     }
 }

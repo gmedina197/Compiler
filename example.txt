@@ -6,7 +6,7 @@ MAIN {
 
 	var = 10 - 2;
 	var = 10 / 2;
-	var = 10 * 2;
+	var = 10 * 2=
 
     IF (a >= 10) {
         PRINT(a);

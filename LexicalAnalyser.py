@@ -36,6 +36,7 @@ class LexicalAnalyser:
         ('VAR', r'[a-z_a-z0-9]\w*'),
         ('NEWLINE', r'\n'),
         ('IGNORE', r'[ \t]+'),
+        ('COMMENT', r'\#.*'),
         ('MISMATCH', r'.'),
     ]
 
@@ -56,6 +57,9 @@ class LexicalAnalyser:
         for m in re.finditer(self.formatted_rules, code):
             token_type = m.lastgroup
             token_lexeme = m.group(token_type)
+
+            if token_type == 'COMMENT':
+                continue
 
             if token_type == 'NEWLINE':
                 self.line += 1

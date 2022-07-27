@@ -61,7 +61,17 @@ class SemanticAnalyser:
         op_types = []
         for index, op in enumerate(ops):
             if(op[0] == 'VAR'):
-                type = self.symbol_table[f'{op[1]}-{op[4]}']['value_type']
+                context = op[4]
+                try:
+                    type = self.symbol_table[f'{op[1]}-{context}']['value_type']
+                except:
+                    while context >= 1:
+                        try:
+                            type = self.symbol_table[f'{op[1]}-{context}']['value_type']
+                            break
+                        except:
+                            context -= 1
+
                 op_types.append(type)
             elif(op[0] in ['INTEGER', 'FLOATN', 'BOOLEAN']):
                 op_types.append(op[0])
@@ -72,8 +82,6 @@ class SemanticAnalyser:
         if(not all_equal(op_types)):
             raise SemanticException(
                 f'Operators are not of the same type', ops[0])
-
-        print(op_types)
 
     def get_tokens_context(self):
         context = 0

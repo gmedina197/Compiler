@@ -3,6 +3,7 @@ from File import File
 from LexicalAnalyser import LexicalAnalyser
 from SemanticAnalyser import SemanticAnalyser
 from SyntaticAnalyser import SyntaticAnalyser
+from ThreeAddressCodeParser import ThreeAddressCodeParser
 
 if __name__ == '__main__':
     file_path = sys.argv[1]
@@ -17,8 +18,9 @@ if __name__ == '__main__':
     syntatic = SyntaticAnalyser()
     syntatic.analyse(lexical.data)
 
-    if syntatic.has_error:
-        print('Error')
-    else:
+    if not syntatic.has_error:
         semantic = SemanticAnalyser()
         semantic.analyse(lexical.data)
+
+    IC = ThreeAddressCodeParser(lexical.data)
+    IC.parse()

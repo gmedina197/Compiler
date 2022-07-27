@@ -42,7 +42,7 @@ class SyntaticAnalyser:
 
             if "e" in action:
                 self.has_error = True
-                break
+                raise Exception(f"There was an error in the syntax")
 
             if action == 'acc':
                 #print('Accepted')
@@ -75,6 +75,7 @@ class SyntaticAnalyser:
 
             else:
                 self.has_error = True
+                raise Exception(f"There was an error in the syntax")
 
     def lookup_goto(self, index, symbol):
         return self.table[symbol][index]
