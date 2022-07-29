@@ -18,9 +18,8 @@ if __name__ == '__main__':
     syntatic = SyntaticAnalyser()
     syntatic.analyse(lexical.data)
 
-    if not syntatic.has_error:
-        semantic = SemanticAnalyser()
-        semantic.analyse(lexical.data)
+    semantic = SemanticAnalyser()
+    semantic.analyse(lexical.data)
 
-    IC = ThreeAddressCodeParser(lexical.data)
+    IC = ThreeAddressCodeParser(semantic.tokens)
     IC.parse()

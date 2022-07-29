@@ -4,14 +4,18 @@ MAIN {
     #INT b = 2 * 10;
 
     #INT var = 3 + 1 / 2 + 1 * 2;
-    INT var = 1;
-    
-    BOOL v = True;
+    INT var = 1;    
+    #BOOL v = True;
 
-    IF (var < 10) {
-        IF (var == 5) {
-            v = False;
-        } 
-        var = var + 1;
+    #WHILE (var < 10) {
+    #    var = var + 1;
+    #}
+
+    IF (var == 5) {
+        WHILE (var < 10) {
+            var = var + 1;
+        }
+    } ELSE {
+        var = var * 1;
     }
 }

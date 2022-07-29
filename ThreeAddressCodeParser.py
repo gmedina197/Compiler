@@ -1,51 +1,132 @@
+from multiprocessing import current_process
+import re
+
+RELOP_MAPPING = {
+    '<': '>=',
+    '>': '<=',
+    '<=': '>',
+    '>=': '<',
+    '==': '!=',
+}
+
 class ThreeAddressCodeParser:
     def __init__(self, tokens):
         self.tokens = tokens
         self.code = []
         self.temp_var_count = 0
         self.L_var_count = 0
+        self.labels = []
 
     def parse(self):
-        for i, token in enumerate(self.tokens):
-            type, lexeme, context, row, col = token
+        i = 0
+        """ operation = list(map(lambda x: x[0], self.tokens))
+        print(operation) """
+
+        current_block = ['MAIN']
+        while i < len(self.tokens):
+            token = self.tokens[i]
+
+            type = token[0]
 
             if type in ['INT', 'FLOAT', 'BOOL']:
-                self.variable_declaration(i)
+                idx = self.variable_declaration(i, is_declaration=True)
+                i = idx
+
+            if type == 'VAR':
+                idx = self.variable_declaration(i, is_declaration=False)
+                i = idx
 
             if type in ["IF", "WHILE", "ELSE"]:
-                self.block_statements(i)
+                current_block.append(type)
+                idx = self.block_statements(i, block_type=type)
+                i = idx
+
+            if type == 'INPUT':
+                self.code.append(f'INPUT {self.tokens[i + 2][1]}')
+                i += 3
+
+            if type == 'PRINT':
+                self.code.append(f'PRINT {self.tokens[i + 2][1]}')
+                i += 3
+
+            if type == 'RBRACE' and len(current_block) > 1:
+                if(current_block.pop() in ['WHILE']):
+                    self.code.append(self.labels.pop())
+
+                self.code.append(self.labels.pop())
+
+            i += 1
+
+        self.print_3_addr_code()
+
+    def print_3_addr_code(self):
+        for line in self.code:
+            if(not re.match(r'^L\d+', line)):
+                print('  ' + line)
+            else:
+                print(line)
 
     def block_statements(self, idx, block_type=None):
         statements = []
 
-        idx += 1
-        if block_type == 'IF':
+        current_context = self.tokens[idx][4]
+
+        l_var = f'L{self.L_var_count}'
+
+        if (block_type == 'WHILE'):
+            idx += 2
             while self.tokens[idx][0] != 'RBRACKET':
                 statements.append(self.tokens[idx][1])
                 idx += 1
 
-            l_var = f'L{self.L_var_count}'
-            l_next = f'L{self.L_var_count+1}'
-
-            print(statements)
+            l_next = f'L{self.L_var_count + 1}'
+            self.code.append(f'{l_var}:')
             self.code.append(
-                f'{l_var}: if({statements[0]} {statements[1]} {statements[2]}) goto {l_next}')
+                f'IF {statements[0]} {RELOP_MAPPING[statements[1]]} {statements[2]} goto {l_next}')
 
-        while idx < len(self.tokens):
-            statements.append(self.tokens[idx])
+            self.labels.append(f'{l_next}:')
+            self.labels.append(f'goto {l_var}')
 
-            if self.tokens[idx][0] == 'IF':
-                # +1 because of the IF token
-                self.block_statements(idx + 1, 'IF')
+            self.L_var_count += 2
 
-            """ if self.tokens[idx][0] == 'RBRACKET':
-                break """
+        if block_type == 'IF':
+            idx += 2
+            while self.tokens[idx][0] != 'RBRACKET':
+                statements.append(self.tokens[idx][1])
+                idx += 1
 
-            idx += 1
+            self.code.append(
+                f'IF {statements[0]} {RELOP_MAPPING[statements[1]]} {statements[2]} goto {l_var}'
+            )
 
-        print(self.code)
+            self.labels.append(f'{l_var}:')
+            self.L_var_count += 1
 
-    def variable_declaration(self, idx):
+        if block_type == 'ELSE':
+            i = len(self.code) - 1
+            found = 0
+            while i >= 0:
+                if 'IF' in self.code[i]:
+                    found += 1
+
+                if found == current_context + 1:
+                    break
+
+                i -= 1
+
+            label_index = self.code.index(self.code[i][-2:] + ':')
+
+            self.code.insert(label_index, f'goto {l_var}')
+
+            l_next = f'L{self.L_var_count + 1}'
+
+            self.labels.append(f'{l_var}:')
+
+            self.L_var_count += 1
+
+        return idx
+
+    def variable_declaration(self, idx, is_declaration=True):
         decl = []
 
         while idx < len(self.tokens):
@@ -59,17 +140,21 @@ class ThreeAddressCodeParser:
         n_values = len(list(filter(lambda x: x[0] in [
                        'INTEGER', 'FLOATN', 'BOOLEAN', 'VAR'], decl))) - 1
 
+        var = decl[1][1] if is_declaration else decl[0][1]
+
+        if is_declaration:
+            decl = decl[3:-1]
+        else:
+            decl = decl[2:-1]
+
         if n_values == 0:
-            self.code.append(f'{decl[1][1]} = 0')
+            self.code.append(f'{var} = 0')
         elif n_values == 1:
-            self.code.append(f'{decl[1][1]} = {decl[3][1]}')
+            self.code.append(f'{var} = {decl[0][1]}')
         elif n_values == 2:
             self.code.append(
-                f'{decl[1][1]} = {decl[3][1]} {decl[4][1]} {decl[5][1]}')
+                f'{var} = {decl[0][1]} {decl[1][1]} {decl[2][1]}')
         else:
-            var = decl[1][1]
-
-            decl = decl[3:-1]
 
             operation = list(map(lambda x: x[1], decl))
 
@@ -88,3 +173,5 @@ class ThreeAddressCodeParser:
 
             self.code.append(f"{var} = {f'T{self.temp_var_count}'}")
             self.temp_var_count += 1
+
+        return idx
